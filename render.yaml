@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: trustvault-secure-document-sharing
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build:prod
+    startCommand: npm run start:prod
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: STORAGE_DIR
+        value: ./storage
+      - key: DEMO_ACCOUNTS_ENABLED
+        value: "true"
+      - key: REGISTRATION_ENABLED
+        value: "true"
+      - key: SESSION_TTL_HOURS
+        value: "8"
+      - key: IDLE_TIMEOUT_MINUTES
+        value: "60"
+      - key: MAX_FILE_SIZE_BYTES
+        value: "10485760"

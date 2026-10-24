@@ -31,17 +31,19 @@ const server = app.listen(PORT, HOST, () => {
   console.log(`=======================================================`);
 });
 
-// Dual listener on port 8080 (built-in Windows Firewall allow rule for Public Wi-Fi)
+// Dual listener on port 8080 (for local Wi-Fi development only)
 let altServer: any = null;
-try {
-  altServer = app.listen(ALT_PORT, HOST, () => {
-    console.log(`🌐 Standby listener active on port ${ALT_PORT} (pre-whitelisted in Windows Firewall)`);
-  });
-  altServer.on("error", (err: any) => {
-    console.warn(`Standby listener on port ${ALT_PORT} not started:`, err.message);
-  });
-} catch (e: any) {
-  console.warn(`Could not bind alt port ${ALT_PORT}:`, e.message);
+if (config.env !== "production" && ALT_PORT !== PORT) {
+  try {
+    altServer = app.listen(ALT_PORT, HOST, () => {
+      console.log(`🌐 Standby listener active on port ${ALT_PORT} (pre-whitelisted in Windows Firewall)`);
+    });
+    altServer.on("error", (err: any) => {
+      console.warn(`Standby listener on port ${ALT_PORT} not started:`, err.message);
+    });
+  } catch (e: any) {
+    console.warn(`Could not bind alt port ${ALT_PORT}:`, e.message);
+  }
 }
 
 process.on("SIGTERM", async () => {

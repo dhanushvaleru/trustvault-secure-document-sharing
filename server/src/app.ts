@@ -10,6 +10,9 @@ import { config } from "./config/index.js";
 
 export const app = express();
 
+// Trust reverse proxy (essential for production deployment on Render, Railway, Cloudflare, etc.)
+app.set("trust proxy", 1);
+
 // Security Headers
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
