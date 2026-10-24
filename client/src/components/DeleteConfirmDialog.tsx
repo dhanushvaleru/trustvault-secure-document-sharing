@@ -20,20 +20,22 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   if (!isOpen || !doc) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-vault-900 border border-rose-800/60 rounded-2xl w-full max-w-md shadow-2xl p-6 space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-rose-950/60 border border-rose-800/80 flex items-center justify-center text-rose-400 mx-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md shadow-modal p-6 space-y-4 animate-slide-up">
+        <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 mx-auto">
           <AlertTriangle className="w-6 h-6" />
         </div>
 
         <div className="text-center space-y-2">
-          <h3 className="text-base font-semibold text-white">Delete Document?</h3>
-          <p className="text-xs text-slate-300">
-            Are you sure you want to delete <span className="font-semibold text-white">"{doc.title}"</span>?
+          <h3 className="text-base font-bold text-slate-900">Delete Document?</h3>
+          <p className="text-xs text-slate-600">
+            Are you sure you want to permanently delete{" "}
+            <span className="font-bold text-slate-900">"{doc.title}"</span>?
           </p>
-          <p className="text-[11px] text-slate-400 bg-vault-850 p-3 rounded-xl border border-vault-800 text-left">
-            ⚠️ The physical file will be safely removed from private storage and inaccessible immediately. All historical audit logs and permission events remain cryptographically preserved.
-          </p>
+          <div className="text-[11px] text-slate-500 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-left leading-relaxed">
+            <span className="font-semibold text-rose-700 block mb-1">⚠️ Irreversible Storage Action:</span>
+            The physical file will be securely removed from private disk storage and inaccessible immediately. All historical audit logs and permission events remain cryptographically preserved.
+          </div>
         </div>
 
         <div className="flex justify-end space-x-3 pt-2">
@@ -41,7 +43,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white bg-vault-800 hover:bg-vault-700 rounded-xl border border-vault-700 transition-colors"
+            className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-colors"
           >
             Cancel
           </button>
@@ -49,7 +51,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="px-5 py-2 text-xs font-medium bg-rose-600 hover:bg-rose-500 text-white rounded-xl shadow transition-colors flex items-center space-x-1.5"
+            className="px-5 py-2 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-sm transition-all flex items-center space-x-1.5 active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? (
               <span>Deleting...</span>

@@ -64,16 +64,22 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-vault-900 border border-vault-700/80 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-vault-800">
-          <div className="flex items-center space-x-2">
-            <Upload className="w-5 h-5 text-vault-400" />
-            <h3 className="font-semibold text-white">Upload Secure Document</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg shadow-modal overflow-hidden animate-slide-up">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Upload className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 text-sm">Upload Secure Document</h3>
+              <p className="text-xs text-slate-500">Encrypted storage with SHA-256 fingerprinting</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-vault-800 transition-colors"
+            className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -81,18 +87,18 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-center space-x-2 text-rose-300 bg-rose-950/50 border border-rose-800/80 px-3.5 py-2.5 rounded-xl text-xs">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+            <div className="flex items-center space-x-2 text-rose-800 bg-rose-50 border border-rose-200 px-3.5 py-2.5 rounded-xl text-xs animate-fade-in">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
           {/* File input dropzone */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Select Document
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              Select Document File
             </label>
-            <div className="border-2 border-dashed border-vault-700 hover:border-vault-500 rounded-xl p-5 text-center transition-colors cursor-pointer bg-vault-850/50 relative">
+            <div className="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-6 text-center transition-all cursor-pointer bg-slate-50/60 hover:bg-indigo-50/20 relative group">
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -100,40 +106,42 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
                 accept=".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.txt,.csv,.json"
               />
               <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-                <FileText className="w-8 h-8 text-vault-400" />
-                <span className="text-xs text-slate-300 font-medium">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all flex items-center justify-center">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <span className="text-xs text-slate-800 font-semibold">
                   {file ? file.name : "Click or drag file here to attach"}
                 </span>
-                <span className="text-[11px] text-slate-500">
-                  Supported: PDF, PNG, JPG, DOCX, XLSX, TXT, CSV, JSON (Max 10MB)
+                <span className="text-[11px] text-slate-400">
+                  Supported formats: PDF, PNG, JPG, DOCX, XLSX, TXT, CSV (Max 10MB)
                 </span>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Document Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Q4 Master Service Agreement"
-              className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-vault-400"
+              placeholder="e.g. Master Service Agreement 2025"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
               required
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-vault-400"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer"
               >
                 <option value="GENERAL">General</option>
                 <option value="FINANCIAL">Financial</option>
@@ -145,15 +153,15 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Description (Optional)
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              placeholder="Summary of document purpose or context"
-              className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-vault-400"
+              placeholder="Add summary notes or internal context..."
+              className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
             />
           </div>
 
@@ -162,21 +170,24 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white bg-vault-800 hover:bg-vault-700 rounded-xl border border-vault-700 transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors shadow-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 text-xs font-medium bg-vault-500 hover:bg-vault-400 text-white rounded-xl shadow transition-colors flex items-center space-x-2"
+              className="px-5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition-all flex items-center space-x-2 active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
-                <span>Encrypting & Storing...</span>
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Encrypting & Storing...</span>
+                </>
               ) : (
                 <>
                   <Upload className="w-3.5 h-3.5" />
-                  <span>Upload</span>
+                  <span>Upload Document</span>
                 </>
               )}
             </button>

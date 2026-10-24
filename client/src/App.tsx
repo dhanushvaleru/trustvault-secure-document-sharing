@@ -20,9 +20,9 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode; requireAdmin?: bool
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-vault-950 flex flex-col items-center justify-center gap-3">
-        <div className="w-8 h-8 border-2 border-vault-700 border-t-vault-400 rounded-full animate-spin" />
-        <span className="text-xs text-slate-500">Loading session…</span>
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-2 border-slate-200 border-t-indigo-600 rounded-full animate-spin" />
+        <span className="text-xs text-slate-500 font-medium">Loading session…</span>
       </div>
     );
   }
@@ -36,18 +36,21 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode; requireAdmin?: bool
   }
 
   return (
-    <div className="min-h-screen bg-vault-950 text-slate-100 flex flex-col">
-      <Navbar
-        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        isMobileMenuOpen={isMobileMenuOpen}
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col md:flex-row">
+      {/* Dark Navy Sidebar on Left */}
+      <Sidebar
+        onOpenUpload={() => setIsUploadOpen(true)}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar
-          onOpenUpload={() => setIsUploadOpen(true)}
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <Navbar
+          onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          isMobileMenuOpen={isMobileMenuOpen}
         />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto w-full min-w-0">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {children}
         </main>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Edit3, AlertCircle } from "lucide-react";
+import { X, Edit3, AlertCircle, Save } from "lucide-react";
 import { api } from "../api/client";
 import { DocumentItem } from "../types";
 
@@ -59,16 +59,22 @@ export const EditMetadataModal: React.FC<EditMetadataModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-vault-900 border border-vault-700/80 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-vault-800">
-          <div className="flex items-center space-x-2">
-            <Edit3 className="w-5 h-5 text-vault-400" />
-            <h3 className="font-semibold text-white">Edit Document Metadata</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md shadow-modal overflow-hidden animate-slide-up">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Edit3 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 text-sm">Edit Document Metadata</h3>
+              <p className="text-xs text-slate-500">Update title, category, or notes</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-vault-800 transition-colors"
+            className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -76,29 +82,29 @@ export const EditMetadataModal: React.FC<EditMetadataModalProps> = ({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="flex items-center space-x-2 text-rose-300 bg-rose-950/50 border border-rose-800/80 px-3.5 py-2.5 rounded-xl text-xs">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+            <div className="flex items-center space-x-2 text-rose-800 bg-rose-50 border border-rose-200 px-3.5 py-2.5 rounded-xl text-xs animate-fade-in">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Title</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-vault-400"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Category</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
-              className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-vault-400"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer"
             >
               <option value="GENERAL">General</option>
               <option value="FINANCIAL">Financial</option>
@@ -109,12 +115,13 @@ export const EditMetadataModal: React.FC<EditMetadataModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Description</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full bg-vault-850 border border-vault-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-vault-400"
+              placeholder="Internal description..."
+              className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
             />
           </div>
 
@@ -123,16 +130,17 @@ export const EditMetadataModal: React.FC<EditMetadataModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white bg-vault-800 hover:bg-vault-700 rounded-xl border border-vault-700 transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 text-xs font-medium bg-vault-500 hover:bg-vault-400 text-white rounded-xl shadow transition-colors"
+              className="px-5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition-all flex items-center space-x-1.5 active:scale-[0.98] disabled:opacity-50"
             >
-              {loading ? "Saving..." : "Save Changes"}
+              <Save className="w-3.5 h-3.5" />
+              <span>{loading ? "Saving..." : "Save Changes"}</span>
             </button>
           </div>
         </form>

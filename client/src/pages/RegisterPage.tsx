@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Shield, Lock, Mail, User as UserIcon, AlertCircle, CheckCircle, ArrowRight, KeyRound } from "lucide-react";
+import { Shield, Lock, Mail, User as UserIcon, AlertCircle, CheckCircle, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export const RegisterPage: React.FC = () => {
@@ -28,149 +28,175 @@ export const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) { setError("All fields are required"); return; }
-    if (password.length < 10) { setError("Password must be at least 10 characters"); return; }
-    setLoading(true); setError(null);
+    if (!name || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
+    if (password.length < 10) {
+      setError("Password must be at least 10 characters");
+      return;
+    }
+    setLoading(true);
+    setError(null);
     try {
       await register(name.trim(), email.trim(), password);
       setSuccess(true);
       setTimeout(() => navigate("/login"), 1500);
     } catch (err: any) {
       setError(err.message || "Registration failed");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const strength = passwordStrength();
 
   return (
-    <div className="min-h-screen bg-vault-950 flex">
-      {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-vault-900/40 border-r border-vault-800/60 p-12">
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Left branding panel - Deep Navy (#0F172A) */}
+      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-[#0F172A] border-r border-slate-800 p-12 text-white">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-vault-500 to-vault-700 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
             <Shield className="w-5 h-5 text-white" strokeWidth={2.5} />
           </div>
-          <span className="text-lg font-bold text-white tracking-tight">
-            Trust<span className="text-vault-400">Vault</span>
-          </span>
+          <div>
+            <span className="text-xl font-bold tracking-tight text-white">
+              Trust<span className="text-indigo-400">Vault</span>
+            </span>
+            <span className="block text-[10px] font-mono text-slate-400 tracking-wider">
+              ENTERPRISE SECURITY
+            </span>
+          </div>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-8 my-auto py-8">
           <div>
-            <h2 className="text-4xl font-black text-white leading-tight mb-4">
-              Start with full<br />
-              <span className="text-vault-400">document control.</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold border border-indigo-500/30 mb-4">
+              <Zap className="w-3.5 h-3.5 text-indigo-400" />
+              Document Ownership & Governance
+            </span>
+            <h2 className="text-4xl font-black text-white leading-tight mb-4 tracking-tight">
+              Start with total<br />
+              <span className="text-indigo-400">document sovereignty.</span>
             </h2>
-            <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
-              Owner accounts can upload, share, and revoke access. Every action is recorded in a tamper-evident audit trail.
+            <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+              Register as an Owner to upload confidential business records, delegate permissions, and track immutable audit logs in real-time.
             </p>
           </div>
-          <div className="bg-vault-900 border border-vault-800 rounded-2xl p-5 space-y-3 text-xs">
-            <div className="font-semibold text-white text-sm">New accounts get:</div>
+
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-3 text-xs">
+            <div className="font-bold text-white text-sm">Included in every Owner workspace:</div>
             {[
-              "Full document upload capability",
-              "Granular permission management",
-              "Private encrypted file storage",
-              "Real-time audit trail coverage",
+              "Complete document upload and versioning capability",
+              "Granular Discretionary Access Control (DAC)",
+              "Automatic SHA-256 fingerprinting on disk write",
+              "Real-time chained audit event preservation",
             ].map((item) => (
-              <div key={item} className="flex items-center gap-2.5 text-slate-400">
-                <CheckCircle className="w-3.5 h-3.5 text-vault-400 shrink-0" />
-                {item}
+              <div key={item} className="flex items-center gap-2.5 text-slate-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{item}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-xs text-slate-600">© 2024 TrustVault Platform</p>
+        <div className="pt-6 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+          <span>© 2025 TrustVault Platform</span>
+          <span className="text-emerald-400 flex items-center gap-1 font-mono">
+            <CheckCircle2 className="w-3.5 h-3.5" /> High-Assurance Architecture
+          </span>
+        </div>
       </div>
 
-      {/* Form panel */}
+      {/* Right form panel */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12">
-        <div className="w-full max-w-sm space-y-5">
+        <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-8 shadow-card space-y-6">
           <div className="lg:hidden flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-vault-500 to-vault-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center">
               <Shield className="w-4 h-4 text-white" strokeWidth={2.5} />
             </div>
-            <span className="text-base font-bold text-white">TrustVault</span>
+            <span className="text-base font-bold text-slate-900">TrustVault</span>
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-white mb-1">Create your account</h1>
-            <p className="text-sm text-slate-400">Register as an Owner to start managing documents</p>
+            <h1 className="text-2xl font-bold text-slate-900 mb-1 tracking-tight">Create your account</h1>
+            <p className="text-xs text-slate-500">Register as an Owner to start securely managing files</p>
           </div>
 
           {error && (
-            <div className="flex items-start gap-2.5 text-rose-300 bg-rose-950/50 border border-rose-800/70 px-4 py-3 rounded-xl text-sm animate-shake">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{error}</span>
+            <div className="flex items-start gap-2.5 text-rose-800 bg-rose-50 border border-rose-200 px-4 py-3 rounded-xl text-xs animate-shake">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <span className="font-medium">{error}</span>
             </div>
           )}
+
           {success && (
-            <div className="flex items-center gap-2.5 text-emerald-300 bg-emerald-950/50 border border-emerald-800/70 px-4 py-3 rounded-xl text-sm">
-              <CheckCircle className="w-4 h-4 shrink-0" />
-              <span>Account created! Redirecting to sign in…</span>
+            <div className="flex items-center gap-2.5 text-emerald-800 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl text-xs animate-fade-in">
+              <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="font-medium">Account created successfully! Redirecting to sign in…</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">Full Name</label>
+              <label className="text-xs font-semibold text-slate-700 block">Full Name</label>
               <div className="relative">
-                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Alice Cooper"
-                  className="input-field pl-10 pr-4 py-3"
+                  placeholder="e.g. Alice Cooper"
+                  className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">Work Email</label>
+              <label className="text-xs font-semibold text-slate-700 block">Work Email</label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="input-field pl-10 pr-4 py-3"
+                  className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 block">Password</label>
+              <label className="text-xs font-semibold text-slate-700 block">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 10 chars · uppercase · number · symbol"
-                  className="input-field pl-10 pr-4 py-3"
+                  className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
                   required
                 />
               </div>
+
               {/* Password strength bar */}
               {password.length > 0 && (
-                <div className="space-y-1">
+                <div className="space-y-1 pt-1">
                   <div className="flex gap-1">
                     {[1, 2, 3, 4].map((i) => (
                       <div
                         key={i}
-                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          i <= strength ? strengthColor[strength] : "bg-vault-800"
+                        className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                          i <= strength ? strengthColor[strength] : "bg-slate-200"
                         }`}
                       />
                     ))}
                   </div>
-                  <p className="text-[10px] text-slate-500">
-                    Strength: <span className="font-semibold text-slate-400">{strengthLabel[strength]}</span>
+                  <p className="text-[10px] text-slate-400">
+                    Strength: <span className="font-semibold text-slate-700">{strengthLabel[strength]}</span>
                     {strength < 4 && " — add uppercase, numbers, and symbols"}
                   </p>
                 </div>
@@ -180,12 +206,12 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || success}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-vault-500 hover:bg-vault-400 text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-vault-500/30 transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-sm hover:shadow transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Creating Account…
+                  <span>Creating Account…</span>
                 </>
               ) : (
                 <>
@@ -196,9 +222,9 @@ export const RegisterPage: React.FC = () => {
             </button>
           </form>
 
-          <p className="text-center text-xs text-slate-500">
+          <p className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
             Already registered?{" "}
-            <Link to="/login" className="text-vault-400 hover:text-vault-300 font-semibold transition-colors">
+            <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">
               Sign In
             </Link>
           </p>

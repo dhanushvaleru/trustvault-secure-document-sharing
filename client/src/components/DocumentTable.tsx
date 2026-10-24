@@ -5,8 +5,12 @@ import {
   Share2,
   Edit2,
   Trash2,
-  MoreHorizontal,
   FileLock2,
+  FileCode,
+  FileArchive,
+  Image as ImageIcon,
+  Shield,
+  Eye,
 } from "lucide-react";
 import { DocumentItem } from "../types";
 
@@ -27,19 +31,49 @@ const formatBytes = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
 };
 
-const categoryStyle: Record<string, string> = {
-  FINANCIAL: "bg-emerald-950/60 text-emerald-300 border-emerald-800/70",
-  LEGAL: "bg-amber-950/60 text-amber-300 border-amber-800/70",
-  HR: "bg-sky-950/60 text-sky-300 border-sky-800/70",
-  TECHNICAL: "bg-indigo-950/60 text-indigo-300 border-indigo-800/70",
-  GENERAL: "bg-slate-800/60 text-slate-300 border-slate-700",
+const getFileIcon = (filename: string, mimeType: string) => {
+  const ext = filename.split(".").pop()?.toLowerCase();
+  if (ext === "pdf" || mimeType.includes("pdf")) {
+    return (
+      <div className="w-9 h-9 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600 shrink-0">
+        <FileText className="w-4 h-4" />
+      </div>
+    );
+  }
+  if (["png", "jpg", "jpeg", "webp"].includes(ext || "") || mimeType.includes("image")) {
+    return (
+      <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0">
+        <ImageIcon className="w-4 h-4" />
+      </div>
+    );
+  }
+  if (["zip", "tar", "gz", "rar"].includes(ext || "") || mimeType.includes("zip")) {
+    return (
+      <div className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
+        <FileArchive className="w-4 h-4" />
+      </div>
+    );
+  }
+  return (
+    <div className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 shrink-0">
+      <FileText className="w-4 h-4" />
+    </div>
+  );
 };
 
-const permStyle: Record<string, string> = {
-  OWNER: "bg-vault-800 text-vault-300 border-vault-700",
-  EDIT: "bg-blue-950/60 text-blue-300 border-blue-800/70",
-  READ: "bg-slate-800/60 text-slate-300 border-slate-700",
-  ADMIN_METADATA: "bg-purple-950/60 text-purple-300 border-purple-800/70",
+const categoryBadgeStyle: Record<string, string> = {
+  FINANCIAL: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  LEGAL: "bg-amber-50 text-amber-700 border-amber-200",
+  HR: "bg-sky-50 text-sky-700 border-sky-200",
+  TECHNICAL: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  GENERAL: "bg-slate-100 text-slate-700 border-slate-200",
+};
+
+const permBadgeStyle: Record<string, string> = {
+  OWNER: "bg-indigo-50 text-indigo-700 border-indigo-200 font-semibold",
+  EDIT: "bg-blue-50 text-blue-700 border-blue-200",
+  READ: "bg-slate-100 text-slate-700 border-slate-200",
+  ADMIN_METADATA: "bg-purple-50 text-purple-700 border-purple-200",
 };
 
 const permLabel: Record<string, string> = {
@@ -59,48 +93,48 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
 }) => {
   if (documents.length === 0) {
     return (
-      <div className="text-center py-20 bg-vault-900/50 rounded-2xl border border-vault-800 border-dashed">
-        <FileLock2 className="w-12 h-12 text-vault-700 mx-auto mb-4" />
-        <h4 className="text-sm font-semibold text-slate-300 mb-1">No documents found</h4>
+      <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
+        <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto mb-3">
+          <FileLock2 className="w-6 h-6" />
+        </div>
+        <h4 className="text-sm font-semibold text-slate-800 mb-1">No documents found</h4>
         <p className="text-xs text-slate-500 max-w-sm mx-auto">
-          No files match your current filters, or no documents have been shared with your account.
+          No files match your search criteria or are shared with your account.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-vault-800 bg-vault-900/60 shadow-xl">
+    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full text-left text-xs min-w-[700px]">
-        <thead className="bg-vault-850/90 border-b border-vault-800 text-[10px] uppercase tracking-widest font-semibold text-slate-500">
+        <thead className="bg-slate-50/80 border-b border-slate-200 text-[10px] uppercase tracking-wider font-semibold text-slate-500">
           <tr>
-            <th className="px-5 py-4 w-[35%]">Document</th>
-            <th className="px-4 py-4">Category</th>
-            <th className="px-4 py-4">Size</th>
-            <th className="px-4 py-4">Owner</th>
-            <th className="px-4 py-4">Access</th>
-            <th className="px-4 py-4">Uploaded</th>
-            <th className="px-5 py-4 text-right">Actions</th>
+            <th className="px-5 py-3.5">Document</th>
+            <th className="px-4 py-3.5">Category</th>
+            <th className="px-4 py-3.5">Size</th>
+            <th className="px-4 py-3.5">Owner</th>
+            <th className="px-4 py-3.5">Access Level</th>
+            <th className="px-4 py-3.5">Date Modified</th>
+            <th className="px-5 py-3.5 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-vault-800/50">
+        <tbody className="divide-y divide-slate-100 text-slate-600">
           {documents.map((doc) => (
             <tr
               key={doc.id}
-              className="hover:bg-vault-850/30 transition-colors duration-100 group cursor-pointer"
+              className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
               onClick={() => onViewDetails(doc)}
             >
-              {/* Document name + filename */}
-              <td className="px-5 py-4">
+              {/* Document details */}
+              <td className="px-5 py-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-vault-800/80 border border-vault-700/60 flex items-center justify-center text-vault-400 shrink-0 group-hover:border-vault-600 transition-colors">
-                    <FileText className="w-4 h-4" />
-                  </div>
+                  {getFileIcon(doc.originalFilename, doc.mimeType)}
                   <div className="min-w-0">
-                    <div className="font-semibold text-slate-200 group-hover:text-vault-300 transition-colors truncate max-w-[200px]">
+                    <div className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors truncate max-w-xs">
                       {doc.title}
                     </div>
-                    <div className="text-[10px] text-slate-500 font-mono truncate max-w-[200px] mt-0.5">
+                    <div className="text-[10px] text-slate-400 font-mono truncate max-w-xs">
                       {doc.originalFilename}
                     </div>
                   </div>
@@ -108,31 +142,39 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
               </td>
 
               {/* Category */}
-              <td className="px-4 py-4">
-                <span className={`badge ${categoryStyle[doc.category] || categoryStyle.GENERAL}`}>
+              <td className="px-4 py-3.5">
+                <span
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                    categoryBadgeStyle[doc.category] || categoryBadgeStyle.GENERAL
+                  }`}
+                >
                   {doc.category}
                 </span>
               </td>
 
               {/* Size */}
-              <td className="px-4 py-4 text-slate-500 font-mono">
+              <td className="px-4 py-3.5 text-slate-500 font-mono text-[11px]">
                 {formatBytes(doc.fileSize)}
               </td>
 
               {/* Owner */}
-              <td className="px-4 py-4">
-                <div className="font-medium text-slate-300">{doc.owner.name}</div>
-                <div className="text-[10px] text-slate-600 font-mono">{doc.owner.email}</div>
+              <td className="px-4 py-3.5">
+                <div className="text-slate-800 font-medium">{doc.owner.name}</div>
+                <div className="text-[10px] text-slate-400 truncate max-w-[150px]">{doc.owner.email}</div>
               </td>
 
-              {/* Access level */}
-              <td className="px-4 py-4">
+              {/* Permission level */}
+              <td className="px-4 py-3.5">
                 <div className="flex items-center gap-1.5">
-                  <span className={`badge ${permStyle[doc.effectivePermission] || permStyle.READ}`}>
+                  <span
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                      permBadgeStyle[doc.effectivePermission] || permBadgeStyle.READ
+                    }`}
+                  >
                     {permLabel[doc.effectivePermission] || doc.effectivePermission}
                   </span>
                   {doc.effectivePermission === "OWNER" && doc.activeSharesCount > 0 && (
-                    <span className="text-[10px] text-vault-400 bg-vault-800 px-1.5 py-0.5 rounded border border-vault-700">
+                    <span className="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-full border border-indigo-200">
                       {doc.activeSharesCount} shared
                     </span>
                   )}
@@ -140,17 +182,21 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
               </td>
 
               {/* Date */}
-              <td className="px-4 py-4 text-slate-500">
-                {new Date(doc.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+              <td className="px-4 py-3.5 text-slate-500 text-[11px]">
+                {new Date(doc.updatedAt || doc.createdAt).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </td>
 
               {/* Actions */}
-              <td className="px-5 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <td className="px-5 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center justify-end gap-1">
                   {doc.effectivePermission !== "ADMIN_METADATA" && (
                     <button
                       onClick={() => onDownload(doc)}
-                      className="p-1.5 text-slate-500 hover:text-emerald-300 hover:bg-vault-800 rounded-lg transition-all"
+                      className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                       title="Download"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -159,8 +205,8 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                   {doc.effectivePermission === "OWNER" && (
                     <button
                       onClick={() => onShare(doc)}
-                      className="p-1.5 text-slate-500 hover:text-vault-300 hover:bg-vault-800 rounded-lg transition-all"
-                      title="Manage Permissions"
+                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                      title="Share Permissions"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                     </button>
@@ -168,7 +214,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                   {(doc.effectivePermission === "OWNER" || doc.effectivePermission === "EDIT") && (
                     <button
                       onClick={() => onEdit(doc)}
-                      className="p-1.5 text-slate-500 hover:text-amber-300 hover:bg-vault-800 rounded-lg transition-all"
+                      className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                       title="Edit Metadata"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -177,7 +223,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({
                   {doc.effectivePermission === "OWNER" && (
                     <button
                       onClick={() => onDelete(doc)}
-                      className="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 rounded-lg transition-all"
+                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete Document"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

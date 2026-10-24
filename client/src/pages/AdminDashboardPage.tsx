@@ -4,7 +4,6 @@ import {
   Users,
   FileText,
   Download,
-  Share2,
   AlertOctagon,
   Activity,
   CheckCircle2,
@@ -17,6 +16,8 @@ import {
   UserCheck,
   ExternalLink,
   Key,
+  Shield,
+  Clock,
 } from "lucide-react";
 import { api } from "../api/client";
 import {
@@ -132,25 +133,25 @@ export const AdminDashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Admin Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-vault-900/80 border border-purple-900/50 rounded-2xl p-6 backdrop-blur">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2 text-purple-400 font-mono text-xs mb-1">
+          <div className="flex items-center space-x-2 text-indigo-600 font-semibold text-xs mb-1">
             <ShieldCheck className="w-4 h-4" />
             <span>ADMINISTRATIVE GOVERNANCE</span>
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Security Console & Audit Trail</h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Security Console & Audit Trail</h2>
+          <p className="text-xs text-slate-500 mt-1">
             System metrics, user lifecycle control, and real-time cryptographic audit chain verification.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 shrink-0">
           <button
             onClick={handleManualVerify}
             disabled={verifying}
-            className="flex items-center space-x-2 bg-vault-800 hover:bg-vault-700 text-purple-300 border border-purple-800/60 font-medium text-xs py-2 px-3.5 rounded-xl shadow transition-colors"
+            className="flex items-center space-x-2 bg-white hover:bg-slate-50 text-indigo-700 border border-slate-200 font-semibold text-xs py-2.5 px-3.5 rounded-xl shadow-sm transition-all"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${verifying ? "animate-spin" : ""}`} />
             <span>Verify Audit Chain</span>
@@ -158,7 +159,7 @@ export const AdminDashboardPage: React.FC = () => {
 
           <button
             onClick={handleGenerateCheckpoint}
-            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs py-2 px-3.5 rounded-xl shadow transition-colors"
+            className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-2.5 px-3.5 rounded-xl shadow-sm transition-all active:scale-[0.98]"
           >
             <Key className="w-3.5 h-3.5" />
             <span>Generate Checkpoint</span>
@@ -167,18 +168,24 @@ export const AdminDashboardPage: React.FC = () => {
       </div>
 
       {successMsg && (
-        <div className="bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 px-4 py-3 rounded-xl text-xs flex items-center justify-between animate-fade-in">
-          <span>{successMsg}</span>
-          <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-white">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-xs flex items-center justify-between shadow-card animate-fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-medium">{successMsg}</span>
+          </div>
+          <button onClick={() => setSuccessMsg(null)} className="text-emerald-600 hover:text-emerald-800 font-bold ml-2">
             ✕
           </button>
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-950/60 border border-rose-800/80 text-rose-300 px-4 py-3 rounded-xl text-xs flex items-center justify-between animate-fade-in">
-          <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-rose-400 hover:text-white">
+        <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs flex items-center justify-between shadow-card animate-fade-in">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span className="font-medium">{error}</span>
+          </div>
+          <button onClick={() => setError(null)} className="text-rose-600 hover:text-rose-800 font-bold ml-2">
             ✕
           </button>
         </div>
@@ -187,94 +194,100 @@ export const AdminDashboardPage: React.FC = () => {
       {/* Cryptographic Chain Integrity Banner */}
       {verification && (
         <div
-          className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs ${
+          className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs shadow-card ${
             verification.isValid
-              ? "bg-emerald-950/30 border-emerald-800/60 text-emerald-300"
-              : "bg-rose-950/40 border-rose-800/80 text-rose-300 animate-pulse"
+              ? "bg-emerald-50/80 border-emerald-200 text-emerald-900"
+              : "bg-rose-50 border-rose-300 text-rose-900 animate-pulse"
           }`}
         >
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 min-w-0">
             {verification.isValid ? (
-              <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
             ) : (
-              <AlertTriangle className="w-6 h-6 text-rose-400 shrink-0" />
+              <AlertTriangle className="w-6 h-6 text-rose-600 shrink-0" />
             )}
-            <div>
+            <div className="min-w-0">
               <div className="font-bold flex items-center gap-2">
-                <span>{verification.isValid ? "Audit Chain Intact & Verifiable" : "TAMPERING DETECTED IN AUDIT LOG"}</span>
-                <span className="font-mono text-[10px] bg-vault-900 px-2 py-0.5 rounded border border-vault-700">
+                <span>{verification.isValid ? "Audit Chain Intact & Cryptographically Valid" : "TAMPERING DETECTED IN AUDIT LOG"}</span>
+                <span className="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-slate-200 font-semibold text-slate-700">
                   {verification.totalEvents} events chained
                 </span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5 font-mono truncate max-w-xl">
+              <div className="text-[11px] text-slate-500 mt-0.5 font-mono truncate max-w-xl">
                 Latest Hash: {verification.latestHash}
               </div>
               {verification.reason && (
-                <div className="text-rose-400 font-semibold mt-1">⚠️ {verification.reason}</div>
+                <div className="text-rose-700 font-semibold mt-1">⚠️ {verification.reason}</div>
               )}
             </div>
           </div>
 
-          <div className="text-slate-400 text-[10px] shrink-0 font-mono">
+          <div className="text-slate-500 text-[10px] shrink-0 font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200">
             Verified {new Date(verification.verifiedAt).toLocaleTimeString()}
           </div>
         </div>
       )}
 
-      {/* Checkpoint Display Modal / Card */}
+      {/* Checkpoint Display Card */}
       {checkpoint && (
-        <div className="bg-vault-850 border border-purple-800/70 p-4 rounded-xl text-xs space-y-2">
-          <div className="font-semibold text-purple-300 flex items-center justify-between">
-            <span>Signed External Checkpoint (HMAC-SHA256)</span>
-            <button onClick={() => setCheckpoint(null)} className="text-slate-400 hover:text-white">✕</button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono text-slate-300">
-            <div>
-              <span className="text-slate-500 block">Checkpoint Hash:</span>
-              <span className="break-all">{checkpoint.checkpointHash}</span>
+        <div className="bg-white border border-indigo-200 p-5 rounded-2xl shadow-card text-xs space-y-3 animate-fade-in">
+          <div className="font-bold text-slate-900 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Key className="w-4 h-4 text-indigo-600" />
+              <span>Signed External Checkpoint (HMAC-SHA256)</span>
             </div>
-            <div>
-              <span className="text-slate-500 block">Cryptographic Signature:</span>
-              <span className="break-all text-purple-300">{checkpoint.signature}</span>
+            <button onClick={() => setCheckpoint(null)} className="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] font-mono">
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <span className="text-slate-400 font-semibold uppercase text-[10px] block mb-1">Checkpoint Hash:</span>
+              <span className="break-all text-slate-800 font-bold">{checkpoint.checkpointHash}</span>
+            </div>
+            <div className="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100">
+              <span className="text-indigo-600 font-semibold uppercase text-[10px] block mb-1">HMAC Signature:</span>
+              <span className="break-all text-indigo-800 font-bold">{checkpoint.signature}</span>
             </div>
           </div>
-          <p className="text-[10px] text-slate-400">
+          <p className="text-[11px] text-slate-500">
             This checkpoint can be written to cold immutable storage or third-party ledger to guarantee independent audit verifiability against database-level attackers.
           </p>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-vault-800 space-x-6 text-xs font-semibold">
+      <div className="flex border-b border-slate-200 space-x-6 text-xs font-bold">
         <button
           onClick={() => setActiveTab("overview")}
-          className={`pb-3 border-b-2 transition-colors ${
+          className={`pb-3 border-b-2 transition-colors flex items-center gap-2 ${
             activeTab === "overview"
-              ? "border-purple-400 text-purple-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          Overview & Telemetry
+          <Activity className="w-3.5 h-3.5" />
+          <span>Overview & Telemetry</span>
         </button>
         <button
           onClick={() => setActiveTab("users")}
-          className={`pb-3 border-b-2 transition-colors ${
+          className={`pb-3 border-b-2 transition-colors flex items-center gap-2 ${
             activeTab === "users"
-              ? "border-purple-400 text-purple-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          User Accounts ({users.length})
+          <Users className="w-3.5 h-3.5" />
+          <span>User Accounts ({users.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("audit")}
-          className={`pb-3 border-b-2 transition-colors ${
+          className={`pb-3 border-b-2 transition-colors flex items-center gap-2 ${
             activeTab === "audit"
-              ? "border-purple-400 text-purple-300"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          Audit Log Explorer
+          <Shield className="w-3.5 h-3.5" />
+          <span>Audit Log Explorer</span>
         </button>
       </div>
 
@@ -282,73 +295,88 @@ export const AdminDashboardPage: React.FC = () => {
       {activeTab === "overview" && metrics && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-vault-900 border border-vault-800 rounded-2xl p-4">
-              <div className="flex items-center justify-between text-slate-400 mb-2">
-                <span className="text-xs font-medium">Active Accounts</span>
-                <Users className="w-4 h-4 text-vault-400" />
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-card">
+              <div className="flex items-center justify-between text-slate-500 mb-2">
+                <span className="text-xs font-semibold">Active Accounts</span>
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <Users className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white">{metrics.activeUsers}</div>
-              <div className="text-[10px] text-slate-500 mt-1">{metrics.totalUsers} registered total</div>
+              <div className="text-2xl font-bold text-slate-900">{metrics.activeUsers}</div>
+              <div className="text-[11px] text-slate-400 mt-1">{metrics.totalUsers} registered total</div>
             </div>
 
-            <div className="bg-vault-900 border border-vault-800 rounded-2xl p-4">
-              <div className="flex items-center justify-between text-slate-400 mb-2">
-                <span className="text-xs font-medium">Documents Stored</span>
-                <FileText className="w-4 h-4 text-blue-400" />
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-card">
+              <div className="flex items-center justify-between text-slate-500 mb-2">
+                <span className="text-xs font-semibold">Documents Stored</span>
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white">{metrics.totalDocuments}</div>
-              <div className="text-[10px] text-slate-500 mt-1">Private file storage</div>
+              <div className="text-2xl font-bold text-slate-900">{metrics.totalDocuments}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Encrypted file storage</div>
             </div>
 
-            <div className="bg-vault-900 border border-vault-800 rounded-2xl p-4">
-              <div className="flex items-center justify-between text-slate-400 mb-2">
-                <span className="text-xs font-medium">Authorized Downloads</span>
-                <Download className="w-4 h-4 text-emerald-400" />
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-card">
+              <div className="flex items-center justify-between text-slate-500 mb-2">
+                <span className="text-xs font-semibold">Authorized Downloads</span>
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <Download className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-white">{metrics.totalDownloads}</div>
-              <div className="text-[10px] text-slate-500 mt-1">Audit verified</div>
+              <div className="text-2xl font-bold text-slate-900">{metrics.totalDownloads}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Audited & verified</div>
             </div>
 
-            <div className="bg-vault-900 border border-vault-800 rounded-2xl p-4">
-              <div className="flex items-center justify-between text-slate-400 mb-2">
-                <span className="text-xs font-medium">Denied Attempts</span>
-                <AlertOctagon className="w-4 h-4 text-rose-400" />
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-card">
+              <div className="flex items-center justify-between text-slate-500 mb-2">
+                <span className="text-xs font-semibold">Denied Attempts</span>
+                <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <AlertOctagon className="w-4 h-4" />
+                </div>
               </div>
-              <div className="text-2xl font-bold text-rose-400">{metrics.deniedAccessAttempts}</div>
-              <div className="text-[10px] text-slate-500 mt-1">{metrics.recentDenied24h} in last 24h</div>
+              <div className="text-2xl font-bold text-rose-600">{metrics.deniedAccessAttempts}</div>
+              <div className="text-[11px] text-slate-400 mt-1">{metrics.recentDenied24h} in last 24h</div>
             </div>
           </div>
 
           {/* Recent Audit Feed */}
-          <div className="bg-vault-900 border border-vault-800 rounded-2xl p-6 space-y-4">
-            <h3 className="font-semibold text-white text-sm flex items-center justify-between">
-              <span>Recent Security Events</span>
-              <span className="text-xs text-purple-400 font-mono">Live Chained Feed</span>
-            </h3>
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-card space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-indigo-600" />
+                <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider">
+                  Recent Security Events
+                </h3>
+              </div>
+              <span className="text-[10px] text-indigo-700 bg-indigo-50 font-bold px-2.5 py-0.5 rounded-full border border-indigo-100">
+                Live Chained Feed
+              </span>
+            </div>
 
-            <div className="divide-y divide-vault-800/80 text-xs">
+            <div className="divide-y divide-slate-100 text-xs">
               {recentEvents.map((evt) => (
-                <div key={evt.id} className="py-3 flex items-center justify-between gap-3">
+                <div key={evt.id} className="py-3 flex items-center justify-between gap-3 hover:bg-slate-50/60 transition-colors px-1">
                   <div className="flex items-center space-x-3 min-w-0">
                     <span
-                      className={`inline-block w-2 h-2 rounded-full shrink-0 ${
-                        evt.outcome === "SUCCESS" ? "bg-emerald-400" : "bg-rose-400"
+                      className={`inline-block w-2.5 h-2.5 rounded-full shrink-0 ${
+                        evt.outcome === "SUCCESS" ? "bg-emerald-500" : "bg-rose-500"
                       }`}
                     />
                     <div className="truncate">
-                      <span className="font-semibold text-slate-200">{evt.actionType}</span>
-                      <span className="text-slate-500 text-[11px] ml-2 font-mono">
+                      <span className="font-bold text-slate-800">{evt.actionType}</span>
+                      <span className="text-slate-400 text-[11px] ml-2 font-mono">
                         seq #{evt.sequence}
                       </span>
                       {evt.metadataJson && (
-                        <div className="text-slate-400 text-[11px] font-mono truncate max-w-lg mt-0.5">
+                        <div className="text-slate-500 text-[11px] font-mono truncate max-w-lg mt-0.5">
                           {evt.metadataJson}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0 text-[11px] text-slate-500 font-mono">
+                  <div className="text-right shrink-0 text-[11px] text-slate-400 font-mono">
                     {new Date(evt.timestamp).toLocaleTimeString()}
                   </div>
                 </div>
@@ -360,9 +388,9 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* TAB 2: USER ACCOUNT LIFECYCLE */}
       {activeTab === "users" && (
-        <div className="bg-vault-900 border border-vault-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-card">
           <table className="w-full text-left text-xs">
-            <thead className="bg-vault-850/80 border-b border-vault-800 text-slate-400 font-medium uppercase tracking-wider text-[10px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="px-5 py-3.5">User</th>
                 <th className="px-4 py-3.5">Role</th>
@@ -372,21 +400,21 @@ export const AdminDashboardPage: React.FC = () => {
                 <th className="px-5 py-3.5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-vault-800 text-slate-300">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-vault-850/40 transition-colors">
+                <tr key={u.id} className="hover:bg-slate-50/80 transition-colors">
                   <td className="px-5 py-3.5">
-                    <div className="font-semibold text-white">{u.name}</div>
+                    <div className="font-bold text-slate-900">{u.name}</div>
                     <div className="text-[11px] text-slate-400 font-mono">{u.email}</div>
                   </td>
                   <td className="px-4 py-3.5 font-mono text-[11px]">
                     <span
-                      className={`px-2 py-0.5 rounded ${
+                      className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${
                         u.role === "ADMIN"
-                          ? "bg-purple-950 text-purple-300 border border-purple-800"
+                          ? "bg-purple-50 text-purple-700 border border-purple-200"
                           : u.role === "OWNER"
-                          ? "bg-blue-950 text-blue-300 border border-blue-800"
-                          : "bg-slate-800 text-slate-300 border border-slate-700"
+                          ? "bg-blue-50 text-blue-700 border border-blue-200"
+                          : "bg-slate-100 text-slate-700 border border-slate-200"
                       }`}
                     >
                       {u.role}
@@ -394,21 +422,21 @@ export const AdminDashboardPage: React.FC = () => {
                   </td>
                   <td className="px-4 py-3.5">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
                         u.status === "ACTIVE"
-                          ? "bg-emerald-950/60 text-emerald-300 border-emerald-800"
-                          : "bg-rose-950/60 text-rose-300 border-rose-800"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-rose-50 text-rose-700 border-rose-200"
                       }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
-                          u.status === "ACTIVE" ? "bg-emerald-400" : "bg-rose-400"
+                          u.status === "ACTIVE" ? "bg-emerald-500" : "bg-rose-500"
                         }`}
                       />
                       {u.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5 font-mono text-[11px]">
+                  <td className="px-4 py-3.5 font-mono text-[11px] font-semibold text-slate-700">
                     {u._count?.ownedDocuments ?? 0}
                   </td>
                   <td className="px-4 py-3.5 text-slate-400 text-[11px]">
@@ -418,10 +446,10 @@ export const AdminDashboardPage: React.FC = () => {
                     {u.role !== "ADMIN" && (
                       <button
                         onClick={() => handleToggleUserStatus(u)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                           u.status === "ACTIVE"
-                            ? "bg-rose-950/30 text-rose-300 border-rose-800/80 hover:bg-rose-900/50"
-                            : "bg-emerald-950/30 text-emerald-300 border-emerald-800/80 hover:bg-emerald-900/50"
+                            ? "bg-white text-rose-700 border-rose-200 hover:bg-rose-50"
+                            : "bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50"
                         }`}
                       >
                         {u.status === "ACTIVE" ? "Deactivate" : "Reactivate"}
@@ -438,7 +466,7 @@ export const AdminDashboardPage: React.FC = () => {
       {/* TAB 3: AUDIT LOG EXPLORER */}
       {activeTab === "audit" && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-card flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="flex items-center space-x-2 w-full sm:w-auto">
               <select
                 value={actionFilter}
@@ -446,7 +474,7 @@ export const AdminDashboardPage: React.FC = () => {
                   setActionFilter(e.target.value);
                   setAuditPage(1);
                 }}
-                className="bg-vault-900 border border-vault-700 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-indigo-600 focus:bg-white cursor-pointer"
               >
                 <option value="">All Action Types</option>
                 <option value="AUTH_LOGIN">AUTH_LOGIN</option>
@@ -467,7 +495,7 @@ export const AdminDashboardPage: React.FC = () => {
                   setOutcomeFilter(e.target.value);
                   setAuditPage(1);
                 }}
-                className="bg-vault-900 border border-vault-700 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-indigo-600 focus:bg-white cursor-pointer"
               >
                 <option value="">All Outcomes</option>
                 <option value="SUCCESS">SUCCESS</option>
@@ -477,41 +505,42 @@ export const AdminDashboardPage: React.FC = () => {
 
             <button
               onClick={fetchAuditLogs}
-              className="p-2 bg-vault-900 border border-vault-700 text-slate-300 hover:text-white rounded-xl transition-colors"
+              className="p-2 bg-slate-50 border border-slate-200 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-xl transition-colors"
+              title="Refresh Audit Logs"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="bg-vault-900 border border-vault-800 rounded-2xl overflow-hidden shadow-xl overflow-x-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-card overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-vault-850/80 border-b border-vault-800 text-slate-400 font-medium uppercase tracking-wider text-[10px]">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="px-4 py-3.5">Seq</th>
                   <th className="px-4 py-3.5">Timestamp</th>
                   <th className="px-4 py-3.5">Action</th>
                   <th className="px-4 py-3.5">Outcome</th>
                   <th className="px-4 py-3.5">Actor User</th>
-                  <th className="px-4 py-3.5">Current SHA-256 Hash</th>
+                  <th className="px-4 py-3.5">SHA-256 Hash</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-vault-800 text-slate-300 font-mono text-[11px]">
+              <tbody className="divide-y divide-slate-100 text-slate-700 font-mono text-[11px]">
                 {auditLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-vault-850/40 transition-colors">
-                    <td className="px-4 py-3.5 text-vault-400 font-bold">#{log.sequence}</td>
-                    <td className="px-4 py-3.5 text-slate-400">
+                  <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="px-4 py-3.5 text-indigo-700 font-bold">#{log.sequence}</td>
+                    <td className="px-4 py-3.5 text-slate-500">
                       {new Date(log.timestamp).toLocaleString()}
                     </td>
                     <td className="px-4 py-3.5 font-bold font-sans">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] ${
                           log.actionType.startsWith("DOC")
-                            ? "bg-blue-950 text-blue-300 border border-blue-900"
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
                             : log.actionType.startsWith("PERM")
-                            ? "bg-amber-950 text-amber-300 border border-amber-900"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
                             : log.actionType === "ACCESS_DENIED"
-                            ? "bg-rose-950 text-rose-300 border border-rose-900"
-                            : "bg-purple-950 text-purple-300 border border-purple-900"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : "bg-purple-50 text-purple-700 border border-purple-200"
                         }`}
                       >
                         {log.actionType}
@@ -519,19 +548,19 @@ export const AdminDashboardPage: React.FC = () => {
                     </td>
                     <td className="px-4 py-3.5">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold ${
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold border ${
                           log.outcome === "SUCCESS"
-                            ? "text-emerald-400 bg-emerald-950/60"
-                            : "text-rose-400 bg-rose-950/60"
+                            ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                            : "text-rose-700 bg-rose-50 border-rose-200"
                         }`}
                       >
                         {log.outcome}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-400 text-[10px]">
+                    <td className="px-4 py-3.5 text-slate-500 text-[10px]">
                       {log.actorUserId ? log.actorUserId.slice(0, 8) + "..." : "SYSTEM/ANON"}
                     </td>
-                    <td className="px-4 py-3.5 text-vault-300 text-[10px] truncate max-w-xs" title={log.currentHash}>
+                    <td className="px-4 py-3.5 text-slate-600 text-[10px] truncate max-w-xs" title={log.currentHash}>
                       {log.currentHash}
                     </td>
                   </tr>
@@ -542,20 +571,20 @@ export const AdminDashboardPage: React.FC = () => {
 
           {/* Pagination */}
           {auditTotalPages > 1 && (
-            <div className="flex items-center justify-between text-xs text-slate-400 px-2 pt-2">
-              <span>Showing page {auditPage} of {auditTotalPages}</span>
+            <div className="flex items-center justify-between text-xs text-slate-500 px-2 pt-2">
+              <span>Showing page <strong className="text-slate-800">{auditPage}</strong> of <strong className="text-slate-800">{auditTotalPages}</strong></span>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setAuditPage((p) => Math.max(1, p - 1))}
                   disabled={auditPage === 1}
-                  className="px-3 py-1.5 bg-vault-900 border border-vault-800 rounded-lg disabled:opacity-40"
+                  className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl font-medium text-slate-700 disabled:opacity-40 hover:bg-slate-50 shadow-sm"
                 >
                   Previous
                 </button>
                 <button
                   onClick={() => setAuditPage((p) => Math.min(auditTotalPages, p + 1))}
                   disabled={auditPage === auditTotalPages}
-                  className="px-3 py-1.5 bg-vault-900 border border-vault-800 rounded-lg disabled:opacity-40"
+                  className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl font-medium text-slate-700 disabled:opacity-40 hover:bg-slate-50 shadow-sm"
                 >
                   Next
                 </button>

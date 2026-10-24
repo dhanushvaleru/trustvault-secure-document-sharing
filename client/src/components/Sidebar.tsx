@@ -9,6 +9,8 @@ import {
   ShieldCheck,
   ChevronRight,
   X,
+  Shield,
+  FileText,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -57,43 +59,56 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, isOpen = false, 
         key={item.to}
         to={item.to}
         onClick={handleLinkClick}
-        className={`sidebar-link ${
+        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
           active
-            ? isAdmin
-              ? "bg-purple-900/30 text-purple-200 border border-purple-800/60 shadow-sm"
-              : "sidebar-link-active"
-            : isAdmin
-            ? "text-slate-400 hover:text-purple-200 hover:bg-purple-900/20"
-            : "sidebar-link-inactive"
+            ? "bg-indigo-600 text-white font-semibold shadow-sm"
+            : "text-slate-400 hover:text-white hover:bg-slate-800/60"
         }`}
       >
-        <Icon className={`w-4 h-4 shrink-0 ${active && isAdmin ? "text-purple-400" : isAdmin ? "text-purple-500" : ""}`} />
+        <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-slate-400"}`} />
         <span className="flex-1">{item.label}</span>
-        {active && <ChevronRight className="w-3 h-3 opacity-50" />}
+        {active && <ChevronRight className="w-3.5 h-3.5 opacity-70" />}
       </Link>
     );
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full justify-between p-3">
-      <div className="space-y-1">
-        {/* Mobile Header with close button */}
-        <div className="flex items-center justify-between px-3 py-2 md:hidden border-b border-vault-800/60 mb-2">
-          <span className="text-xs font-bold text-white uppercase tracking-wider">Navigation</span>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white rounded-lg">
+    <div className="flex flex-col h-full justify-between p-4 bg-[#0F172A] text-slate-100">
+      <div className="space-y-5">
+        {/* Logo / Header */}
+        <div className="flex items-center justify-between px-2 pt-1 pb-2">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-md">
+              <Shield className="w-4 h-4 text-white" strokeWidth={2.5} />
+            </div>
+            <div>
+              <span className="text-base font-bold text-white tracking-tight">
+                Trust<span className="text-indigo-400">Vault</span>
+              </span>
+              <span className="text-[10px] text-slate-400 block -mt-1 font-normal">
+                Enterprise Security
+              </span>
+            </div>
+          </Link>
+
+          {/* Close button on mobile */}
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-white rounded-lg md:hidden hover:bg-slate-800 transition-colors"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Upload button */}
+        {/* Upload Action Button for Owner/Admin */}
         {(user.role === "OWNER" || user.role === "ADMIN") && onOpenUpload && (
-          <div className="mb-4">
+          <div className="pt-1">
             <button
               onClick={() => {
                 if (onClose) onClose();
                 onOpenUpload();
               }}
-              className="w-full flex items-center justify-center gap-2 bg-vault-500 hover:bg-vault-400 text-white font-semibold text-sm py-2.5 px-4 rounded-xl shadow-md hover:shadow-vault-500/30 transition-all duration-150 active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-md transition-all duration-150 active:scale-[0.98]"
             >
               <Upload className="w-4 h-4" />
               <span>Upload Document</span>
@@ -101,22 +116,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, isOpen = false, 
           </div>
         )}
 
-        {/* Section label */}
-        <div className="px-3 pb-1">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
-            Navigation
-          </span>
+        {/* Navigation list */}
+        <div className="space-y-1">
+          <div className="px-3 pb-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              Workspace
+            </span>
+          </div>
+          {mainNav.map((item) => renderLink(item))}
         </div>
 
-        {/* Main nav */}
-        {mainNav.map((item) => renderLink(item))}
-
-        {/* Admin section */}
+        {/* Admin section for admin role */}
         {user.role === "ADMIN" && (
-          <div className="pt-4 mt-2 border-t border-vault-800/60">
-            <div className="px-3 pb-1">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-purple-600">
-                Administration
+          <div className="pt-3 border-t border-slate-800 space-y-1">
+            <div className="px-3 pb-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
+                Governance
               </span>
             </div>
             {adminNav.map((item) => renderLink(item, true))}
@@ -124,16 +139,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, isOpen = false, 
         )}
       </div>
 
-      {/* Bottom status card */}
-      <div className="p-2 border-t border-vault-800/60">
-        <div className="bg-emerald-950/30 border border-emerald-900/50 rounded-xl px-3 py-2.5">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span className="text-[11px] font-semibold text-emerald-300">Chain Protected</span>
+      {/* Bottom User status card */}
+      <div className="pt-4 border-t border-slate-800">
+        <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs font-bold text-indigo-300 shrink-0">
+            {user.name.charAt(0).toUpperCase()}
           </div>
-          <p className="text-[10px] text-slate-500 leading-relaxed">
-            SHA-256 tamper-evident audit trail active
-          </p>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-semibold text-white truncate">{user.name}</div>
+            <div className="text-[10px] text-slate-400 truncate">{user.email}</div>
+          </div>
+          <span
+            className={`w-2 h-2 rounded-full shrink-0 ${
+              user.role === "ADMIN" ? "bg-purple-400" : "bg-emerald-400"
+            }`}
+            title={`Role: ${user.role}`}
+          />
         </div>
       </div>
     </div>
@@ -141,22 +162,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenUpload, isOpen = false, 
 
   return (
     <>
-      {/* Desktop static sidebar */}
-      <aside className="hidden md:flex w-60 border-r border-vault-800/80 bg-vault-950/80 flex-col min-h-[calc(100vh-64px)] shrink-0">
+      {/* Desktop static navy sidebar */}
+      <aside className="hidden md:flex w-64 bg-[#0F172A] border-r border-slate-800 flex-col min-h-screen shrink-0">
         {sidebarContent}
       </aside>
 
       {/* Mobile drawer with backdrop */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden animate-fade-in">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={onClose}
-          />
-
-          {/* Drawer */}
-          <div className="fixed inset-y-0 left-0 w-64 bg-vault-950 border-r border-vault-800 shadow-2xl z-50">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="fixed inset-y-0 left-0 w-64 bg-[#0F172A] shadow-2xl z-50">
             {sidebarContent}
           </div>
         </div>
