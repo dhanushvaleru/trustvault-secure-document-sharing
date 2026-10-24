@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-vault-950 text-slate-100 antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-vault-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-vault-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-vault-600;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.25s ease-out;
+  }
+  .animate-shake {
+    animation: shake 0.4s ease-in-out;
+  }
+  .glass {
+    @apply bg-vault-900/70 backdrop-blur-md border border-vault-800/80;
+  }
+  .card {
+    @apply bg-vault-900 border border-vault-800 rounded-2xl shadow-lg;
+  }
+  .btn-primary {
+    @apply bg-vault-500 hover:bg-vault-400 text-white font-semibold rounded-xl transition-all duration-150 shadow-md hover:shadow-lg active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply bg-vault-800 hover:bg-vault-700 text-slate-200 border border-vault-700 rounded-xl transition-all duration-150;
+  }
+  .input-field {
+    @apply w-full bg-vault-850 border border-vault-700 rounded-xl text-sm text-white placeholder-slate-500
+    focus:outline-none focus:ring-2 focus:ring-vault-500/50 focus:border-vault-500 transition-all duration-150;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium border;
+  }
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150;
+  }
+  .sidebar-link-active {
+    @apply bg-vault-800 text-vault-300 border border-vault-700/60 shadow-sm;
+  }
+  .sidebar-link-inactive {
+    @apply text-slate-400 hover:text-slate-200 hover:bg-vault-850/80;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@layer base {
+  body {
+    @apply bg-vault-950 text-slate-100 font-sans;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1527;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e335e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #325aa3;
+}

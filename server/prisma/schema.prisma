@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("VIEWER") // ADMIN | OWNER | VIEWER
+  status       String   @default("ACTIVE") // ACTIVE | DEACTIVATED
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions           Session[]
+  ownedDocuments     Document[]           @relation("DocumentOwner")
+  permissions        DocumentPermission[] @relation("UserPermissions")
+  grantedPermissions DocumentPermission[] @relation("GrantedByUser")
+
+  @@index([role])
+  @@index([status])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash    String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  ipAddress    String?
+  userAgent    String?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Document {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  category         String    @default("GENERAL")
+  originalFilename String
+  storageKey       String    @unique
+  fileSize         Int
+  mimeType         String
+  checksumSha256   String
+  ownerId          String
+  owner            User      @relation("DocumentOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  isDeleted        Boolean   @default(false)
+  deletedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  permissions DocumentPermission[]
+
+  @@index([ownerId])
+  @@index([isDeleted])
+  @@index([category])
+  @@index([title])
+}
+
+model DocumentPermission {
+  id              String    @id @default(uuid())
+  documentId      String
+  document        Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation("UserPermissions", fields: [userId], references: [id], onDelete: Cascade)
+  permissionLevel String    // READ | EDIT
+  grantedById     String
+  grantedBy       User      @relation("GrantedByUser", fields: [grantedById], references: [id], onDelete: Restrict)
+  grantedAt       DateTime  @default(now())
+  revokedAt       DateTime?
+
+  @@unique([documentId, userId])
+  @@index([documentId])
+  @@index([userId])
+  @@index([revokedAt])
+}
+
+model AuditEvent {
+  id            String   @id @default(uuid())
+  sequence      Int      @unique
+  timestamp     DateTime @default(now())
+  actorUserId   String?
+  actionType    String
+  documentId    String?
+  targetUserId  String?
+  outcome       String   // SUCCESS | DENIED
+  correlationId String
+  metadataJson  String?
+  previousHash  String
+  currentHash   String
+
+  @@index([sequence])
+  @@index([timestamp])
+  @@index([actorUserId])
+  @@index([documentId])
+  @@index([actionType])
+  @@index([outcome])
+}

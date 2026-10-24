@@ -1,0 +1,27 @@
+{
+  "name": "trustvault",
+  "version": "1.0.0",
+  "description": "TrustVault - Secure Document Sharing Platform with Tamper-Evident Audit Logging",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=server",
+    "dev:all": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspace=server",
+    "db:seed": "npm run db:seed --workspace=server",
+    "start": "node server/dist/index.js"
+  },
+  "keywords": [
+    "security",
+    "document-management",
+    "audit-trail",
+    "rbac",
+    "tamper-evident"
+  ],
+  "author": "TrustVault Engineering",
+  "license": "UNLICENSED"
+}
