@@ -149,7 +149,7 @@ export class AuthController {
     res.cookie(config.sessionCookieName, token, {
       httpOnly: true,
       secure: config.env === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
       expires: expiresAt,
     });
@@ -190,7 +190,7 @@ export class AuthController {
     res.clearCookie(config.sessionCookieName, {
       httpOnly: true,
       secure: config.env === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
     });
 

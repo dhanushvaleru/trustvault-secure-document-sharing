@@ -9,7 +9,14 @@ import {
   UserStatus,
 } from "../types";
 
-const API_BASE = "/api";
+const getApiBase = () => {
+  if (typeof window !== "undefined" && (window as any).__TRUSTVAULT_API_BASE__) {
+    return (window as any).__TRUSTVAULT_API_BASE__;
+  }
+  return "/api";
+};
+
+const API_BASE = getApiBase();
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers || {});
